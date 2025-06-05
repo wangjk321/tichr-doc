@@ -1,6 +1,9 @@
 # Introduction and Install
 
-> TICHR is underdevelopment, this page is only for developer usage. For general users, please wait the release of our formal version.
+<div style="padding: 15px; border: 1px solid transparent; border-color: transparent; margin-bottom: 20px; border-radius: 4px; color: #8a6d3b;; background-color: #fcf8e3; border-color: #faebcc;">
+<b>TICHR is underdevelopment, this page is only for developer usage. For general users, please wait the release of our formal version.</b>
+</div>
+
 
 ## What is TICHR
 
