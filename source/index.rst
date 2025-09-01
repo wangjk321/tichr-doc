@@ -10,13 +10,14 @@ Welcome to tichr's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   introduction
-   compute
-   auprc
-   adjrgx
-   predictEP
-   predictDEG
-   negative
+   0.Introduction
+   1.Compute
+   2.EP
+   3.DEG
+   4.Treatment
+   5.Negative
+   6.Large
+   7.Time
 
 Indices and tables
 ==================
