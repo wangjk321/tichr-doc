@@ -1,4 +1,4 @@
-# Analyze RgX and Rg by predict EP or DEGs
+# Study EP
 
 ## Predict E-P
 To predict E-P interactions, you must have a gold standard for benchmarking the rgx results. You can possiblly use the promoter-capture Hi-C, or other related methods to get the correct data
@@ -6,6 +6,10 @@ To predict E-P interactions, you must have a gold standard for benchmarking the 
 ### Prepare gold df
 
 ``` python
+import sys
+sys.path.append('/home/wang/github/Tichr-CLI/tichr')
+from tichr import *
+
 golddf="auprcdata/K562_gold_label.tsv"
 goldcol =10
 truecol = 12
@@ -118,113 +122,96 @@ showROC(matched[truecol-1],matched.iloc[:,-1],"match1",
 <img src="_static/auprc/004.png" style="zoom:80%;" />
 
 
-## Predict DEGs
 
-### prepare tichr results for control and treat samples.
+#### predict EP by different distance
+``` python
+diffrentThresh(rgxfile_raw,rgfile_raw,golddf,goldcol,outdir,tpmfile,
+                threshType="distance",threshList=[10000,50000,100000,500000,1000000,5000000],
+                tmpcolrep=[3,4,],rggeneID=5,tmpgeneID=2,rgxgeneID=10,
+                matchcol=matchcol,truecol=truecol,goldwithhead=goldwithhead,onlyPlot=False)
+```
+<img src="_static/adjrgx/003.png" style="zoom:80%;" />
 
-Four files are needed for this analysis: RgDF and RgxDF for control and treat sample ,repescitively
+
+
+#### predict EP by different gene TPM
+``` python
+diffrentThresh(rgxfile_raw,rgfile_raw,golddf,goldcol,outdir,tpmfile,
+                threshType="tpm",threshList=[0.0,0.2,0.4,0.6,0.8,0.9],
+                tmpcolrep=[3,4,],rggeneID=5,tmpgeneID=2,rgxgeneID=10,
+                matchcol=matchcol,truecol=truecol,goldwithhead=goldwithhead,onlyPlot=False)
+```
+<img src="_static/adjrgx/004.png" style="zoom:80%;" />
+
+#### predict EP by different trends between Rgx and gene expression
+``` python
+diffrentThresh(rgxfile_raw,rgfile_raw,golddf,goldcol,outdir,tpmfile,
+                threshType="tpm",threshList=[0.0,0.2,0.4,0.6,0.8,0.9],
+                tmpcolrep=[3,4,],rggeneID=5,tmpgeneID=2,rgxgeneID=10,
+                matchcol=matchcol,truecol=truecol,goldwithhead=goldwithhead,onlyPlot=False)
+```
+
+<img src="_static/adjrgx/005.png" style="zoom:80%;" />
+
+
+#### Choose threshold for Rgx
+
+``` python
+plotdensity(rgxfile_raw,outdir,matchedwithhead = goldwithhead,matchcol=matchcol,truecol=truecol)
+```
+<img src="_static/adjrgx/006.png" style="zoom:80%;" />
+
+<img src="_static/adjrgx/007.png" style="zoom:80%;" />
+
+
+
+## study study
+
+The highly enriched EP links are defined as the following steps:
+1. calculate RgX value based on multiomics data
+2. Adjustment for RgX by raw value, gene TPM, and chromatin structure
+3. Normalized RgX
+4. Select maximum distance between gene and sites; 
+5. normRgX >1 and RgX ratio > 0.01 as enriched E-P links
+
+## Identify the regulatory sites of a gene set input
+selected genes from the E-P pair above, by directly search the same gene ID
+
+
+## Identify the target gens of regulatory sites 
+selected targeted genes from the E-P pairs above, by intersectBed the E-P pairs above
+
+## in silico deletions of given sites
+
+To identify the target genes affected by a given set of genomic loci (especially when they show limited overlap with RgX), we performed an in silico deletion analysis. Specifically, we removed the input loci and recalculated the Rg value for each gene. To assess the statistical significance of these changes, we conducted 100 random deletions of the same number of loci and obtained a background distribution of Rg values. For each gene, we calculated a p-value by comparing the in silico-deleted Rg value with the distribution from the random deletions. The resulting p-values were adjusted for multiple testing using the false discovery rate (FDR), and genes with an FDR-adjusted q-value less than 0.05 were considered significant targets of the input loci.
 
 ``` python
 import sys
 sys.path.append('/home/wang/github/Tichr-CLI/tichr')
 from tichr import *
-from studyDEG import *
-
-RgDF_Ctrl_file = "auprcdata/Control_H3K27ac_RgDf.tsv"
-RgxDF_Ctrl_file = "auprcdata/Control_H3K27ac_RgxDf.tsv"
-RgDF_Treat_file = "auprcdata/siNIPBL_H3K27ac_RgDf.tsv"
-RgxDF_Treat_file = "auprcdata/siNIPBL_H3K27ac_RgxDf.tsv"
+from insilico import *
 ```
 
-File requirement for RgDf
-- column1: gene chr
-- column2: gene star
-- column3: gene end
-- column4: gene ID
-- column5: gene symbol
-- column6: gene strand
-- column7: gene Fold change
-- column8: gene FDR
-- column9: gene TPM (average of treat and ctrl)
-- column10: gene Rg score
-
-File requirment for RgxDf
-- column1: site chr
-- column2: site start
-- column3: site end
-- column4: site epigenome signal
-- column5: gene ID
-- column6: gene chr
-- column7: gene start
-- column8: gene end
-- column9: gene strand
-- column10: gene symbol
-- column11: site-to-gene weight
-- column12: Rgx score
-- column13: Rgx ratio
-
-### predict DEGs 
+prepare input files
 ``` python
-diffobj = DiffEvent(RgDF_Ctrl_file,RgxDF_Ctrl_file,RgDF_Treat_file,RgxDF_Treat_file,
-                   maxdistance=500000)
-diffobj.predictDEG(type="ROC",label="alldeg-AUC",degtype='all')
-```
-<img src="_static/auprc/005.png" style="zoom:80%;" />
+Rgdir='/home/wang/Tichr/2024Oct-summary/ContextSpecific/RPE_siNIPBL_denovo/resultdf_all_hic/'
+RgDF_Ctrl = pd.read_csv(Rgdir+"JQ1minus_BRD4_rep0_RP_RgDf.tsv",header=None,sep="\t")
+RgxDF_Ctrl = pd.read_csv(Rgdir+"JQ1minus_BRD4_rep0_RP_RgxDf.tsv",header=None,sep="\t")
 
-- `type`: could be PRC or ROC
-- `label`: label for the examination
-- `degtype`: predict 'all', 'up' or 'down' DEGs
+deletepeakfile = "/home/wang/Tichr/2025March/predictDEG-withadj/JQ1peak/BRD4.jq1lost.peak"
+deletepeakDF=pd.read_csv(deletepeakfile,sep="\t",header=None)
+```
+
+- RgDF_Ctrl: Rg file 
+- RgxDF_Ctrl: RgX file
+- deletepeakfile: insilico deletion file
+
+To validate the result, we can test the lost BRD4 peaks after JQ1 treatment and test if the affected genes are truly DEGs
 
 ``` python
-diffobj.predictDEG(type="PRC",label="downdeg-AUPRC",degtype='down')
-```
-<img src="_static/auprc/006.png" style="zoom:80%;" />
-
-
-You can also draw multiple curve in the same plot. It could be different data source or different parameters in Tichr.
-
-``` python
-RgDF_Ctrl_file = "auprcdata/Control_H3K27ac_RgDf.tsv"
-RgxDF_Ctrl_file = "auprcdata/Control_H3K27ac_RgxDf.tsv"
-RgDF_Treat_file = "auprcdata/siNIPBL_H3K27ac_RgDf.tsv"
-RgxDF_Treat_file = "auprcdata/siNIPBL_H3K27ac_RgxDf.tsv"
-diffobj1 = DiffEvent(RgDF_Ctrl_file,RgxDF_Ctrl_file,RgDF_Treat_file,RgxDF_Treat_file,
-                   maxdistance=500000)
-
-RgDF_Ctrl_file = "auprcdata/Control_H3K27ac_RgDf.tsv"
-RgxDF_Ctrl_file = "auprcdata/Control_H3K27ac_RgxDf.tsv"
-RgDF_Treat_file = "auprcdata/siNIPBL_H3K27ac_RgDf.tsv"
-RgxDF_Treat_file = "auprcdata/siNIPBL_H3K27ac_RgxDf.tsv"
-diffobj2 = DiffEvent(RgDF_Ctrl_file,RgxDF_Ctrl_file,RgDF_Treat_file,RgxDF_Treat_file,
-                   maxdistance=50000)
-
-RgDF_Ctrl_file = "auprcdata/Control_H3K27me3_RgDf.tsv"
-RgxDF_Ctrl_file = "auprcdata/Control_H3K27me3_RgxDf.tsv"
-RgDF_Treat_file = "auprcdata/siNIPBL_H3K27me3_RgDf.tsv"
-RgxDF_Treat_file = "auprcdata/siNIPBL_H3K27me3_RgxDf.tsv"
-diffobj3 = DiffEvent(RgDF_Ctrl_file,RgxDF_Ctrl_file,RgDF_Treat_file,RgxDF_Treat_file,
-                     maxdistance=500000)
-
-RgDF_Ctrl_file = "auprcdata/Control_H3K27me3_RgDf.tsv"
-RgxDF_Ctrl_file = "auprcdata/Control_H3K27me3_RgxDf.tsv"
-RgDF_Treat_file = "auprcdata/siNIPBL_H3K27me3_RgDf.tsv"
-RgxDF_Treat_file = "auprcdata/siNIPBL_H3K27me3_RgxDf.tsv"
-diffobj4 = DiffEvent(RgDF_Ctrl_file,RgxDF_Ctrl_file,RgDF_Treat_file,RgxDF_Treat_file,
-                     maxdistance=50000)
+silico(RgxDF_Ctrl,deletepeakDF,RgDF_Ctrl,degtype="down",degfdr=0.01,nrandom=20,)
 ```
 
-`custome` should be True and linecolor should be specified 
+the results shows the goodnees of in silico deletions.
 
-``` python
-plt.figure(figsize=(4,4))
-diffobj1.predictDEG(label="H3K27ac_500k",custom=True,linecolor="blue")
-diffobj2.predictDEG(label="H3K27ac_50k",custom=True,linecolor="darkblue")
-diffobj3.predictDEG(label="H3K27me3_500k",custom=True,linecolor="red")
-diffobj4.predictDEG(label="H3K27me3_50k",custom=True,linecolor="darkred")
-plt.legend()
-plt.show()
-```
-
-The output is like
-
-<img src="_static/auprc/007.png" style="zoom:80%;" />
+<img src="_static/adjrgx/008.png" style="zoom:80%;" />

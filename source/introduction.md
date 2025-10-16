@@ -1,9 +1,8 @@
-# Introduction TICHR
+# Introduction
 
 <div style="padding: 15px; border: 1px solid transparent; border-color: transparent; margin-bottom: 20px; border-radius: 4px; color: #8a6d3b;; background-color: #fcf8e3; border-color: #faebcc;">
 <b>TICHR is currently under development. This page is intended for internal or developer use only. A public release will be available soon. Thank you.</b>
 </div>
-
 
 
 ## What is TICHR
@@ -21,30 +20,30 @@ TICHR is developed based on Python 3.11.5. In theory, any Python version newer t
 ### Requirement
 
 Python packages:
-
--   numpy
--   pandas
--   scipy
--   matplotlib
--   seaborn
--   pyBigWig
--   scikit-learn
--   hic-straw
--   statsmodels
--   pyranges
--   tqdm
--   adjustText
--   umap-learn
+- pandas
+- numpy
+- matplotlib
+- pyBigWig
+- scipy
+- sklearn
+- seaborn
+- hicstraw
+- collections
+- concurrent
+- functools
+- statsmodels
+- pyranges
 
 Optional
-
 - rpy2
 - joblib
 - multiprocessing
 
-### Install
+### How to install
 
 You can install the latest version of TICHR <u>from PyPI using pip</u>:
+
+
 
 ``` shell
 pip install tichr
@@ -54,7 +53,7 @@ Alternatively, you can install TICHR from the <u>source code</u> on GitHub:
 
 ``` shell
 git clone https://github.com/wangjk321/Tichr
-cd Tichr
+cd XXXX
 python setup.py install
 ```
 
