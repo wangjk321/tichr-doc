@@ -18,6 +18,7 @@ Welcome to tichr's documentation!
    5.Negative
    6.Large
    7.Time
+   CommandLine
 
 Indices and tables
 ==================
