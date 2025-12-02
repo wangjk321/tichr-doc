@@ -1,4 +1,4 @@
-# Command Line Interface
+# 1.5 Command-Line Interface
 
 The core function of **Tichr** -  `compute` and `negative` -  can be used in the form of a command-line tool. 
 
