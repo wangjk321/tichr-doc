@@ -1,6 +1,11 @@
 # Change Logs
 ## Update history of TICHR
 
+### 2025.12.3
+- Fixed bugs for dense matrix
+- Fixed missing files in PyPi.
+- Revise the parameter names.
+
 ### 2025.11.26
 - Fixed bugs.
 

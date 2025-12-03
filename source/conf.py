@@ -58,6 +58,8 @@ html_theme = "furo"
 html_logo = "_static/logo.png"
 #html_title = "your custom sidebar title"
 
+#pygments_style = "sphinx"
+
 html_theme_options = {
     "announcement": "<em>TICHR: Transcriptional regulation analysis by integrating epigenome, 3D genome and transcriptome</em>",
 
