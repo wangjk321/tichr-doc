@@ -1,6 +1,9 @@
 # Change Logs
 ## Update history of TICHR
 
+### 2025.12.9
+- Improved the tutorial for enhancer prediction.
+
 ### 2025.12.3
 - Fixed bugs for dense matrix
 - Fixed missing files in PyPi.
