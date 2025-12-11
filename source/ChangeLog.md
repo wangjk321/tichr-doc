@@ -1,6 +1,12 @@
 # Change Logs
 ## Update history of TICHR
 
+### 2025.12.11
+- Fixed important bugs in context-specific identification.
+
+### 2025.12.10
+- Add more explanations for enhancer identification.
+
 ### 2025.12.9
 - Improved the tutorial for enhancer prediction.
 
