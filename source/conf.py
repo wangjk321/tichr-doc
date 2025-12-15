@@ -22,7 +22,7 @@ copyright = '2025, Jiankang Wang'
 author = 'Jiankang Wang'
 
 # The full version, including alpha/beta/rc tags
-release = '0.1.7'
+release = '0.1.8'
 
 
 # -- General configuration ---------------------------------------------------

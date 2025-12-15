@@ -1,19 +1,27 @@
 # Change Logs
 ## Update history of TICHR
 
+### 2025.12.16
+- Version 0.1.18 released
+
+### 2025.12.15
+- Improved the tutorial for cross-sample analysis.
+- Unified parameter names.
+
 ### 2025.12.11
-- Fixed important bugs in context-specific identification.
+- Fixed critical bugs in context-specific identification.
+- Released version 0.1.17
 
 ### 2025.12.10
-- Add more explanations for enhancer identification.
+- Added more explanations for enhancer identification.
 
-### 2025.12.9
+### 2025.12.09
 - Improved the tutorial for enhancer prediction.
 
-### 2025.12.3
-- Fixed bugs for dense matrix
-- Fixed missing files in PyPi.
-- Revise the parameter names.
+### 2025.12.03
+- Fixed bugs related to dense matrices.
+- Fixed missing files in the PyPI package.
+- Revised parameter names.
 
 ### 2025.11.26
 - Fixed bugs.
