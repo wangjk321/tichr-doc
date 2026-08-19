@@ -1,6 +1,10 @@
 # Change Logs
 ## Update history of TICHR
 
+### 2026.8.10
+- Fixed bugs, including typos in the code.
+- Updated the code structure.
+
 ### 2026.6.1
 - Converted all code comments to English.
 - Fixed several bugs and improved the documentation.
